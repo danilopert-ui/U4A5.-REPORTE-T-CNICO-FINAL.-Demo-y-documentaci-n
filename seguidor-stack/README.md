@@ -122,4 +122,7 @@ notebook) y ejecutar las celdas en orden.
 
 ## Equipo
 
-[COMPLETAR: nombres e integrantes del equipo]
+Juan David Castruita Castañeda
+Angel Daniel Cisneros Perez
+Samantha Elena Camacho Badillo
+Ruben Alvarez Duran
