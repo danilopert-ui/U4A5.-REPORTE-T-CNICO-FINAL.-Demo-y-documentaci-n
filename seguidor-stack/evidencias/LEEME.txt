@@ -1,0 +1,12 @@
+Coloca aquí las evidencias del proyecto:
+
+capturas/
+  - Foto del robot físico sobre la pista
+  - Captura del panel web / tablero Node-RED en vivo
+  - Captura del Monitor Serie (WiFi + MQTT conectado)
+  - Captura de PowerShell con mosquitto_sub mostrando datos
+  - Captura del pipeline_e2e.py ejecutándose
+  - Captura del balance de clases (Group-Object estado)
+
+video/
+  - El video de demostración (o un archivo enlace_video.txt con el link)

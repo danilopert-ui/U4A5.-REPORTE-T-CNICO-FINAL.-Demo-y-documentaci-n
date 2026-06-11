@@ -1,0 +1,65 @@
+# ============================================================
+#  STACK PARA PROYECTO GEMELO DIGITAL - SEGUIDOR DE LINEA
+#  Servicios: Mosquitto (MQTT) + InfluxDB + Node-RED
+# ============================================================
+#  Uso:
+#    docker compose up -d      -> enciende todo
+#    docker compose down       -> apaga todo
+#    docker compose logs -f    -> ver registros en vivo
+# ============================================================
+
+services:
+
+  # ----- BROKER MQTT (Mosquitto) -----
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"      # puerto MQTT estandar
+      - "9001:9001"      # puerto websockets (por si se necesita)
+    volumes:
+      - ./mosquitto-config:/mosquitto/config
+      - mosquitto-data:/mosquitto/data
+      - mosquitto-log:/mosquitto/log
+
+  # ----- BASE DE DATOS (InfluxDB 2.x) -----
+  influxdb:
+    image: influxdb:2.7
+    container_name: influxdb
+    restart: unless-stopped
+    ports:
+      - "8086:8086"      # interfaz web y API de InfluxDB
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+      - influxdb-config:/etc/influxdb2
+    environment:
+      # --- Configuracion inicial automatica ---
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=seguidor123
+      - DOCKER_INFLUXDB_INIT_ORG=robotica
+      - DOCKER_INFLUXDB_INIT_BUCKET=seguidor
+      - DOCKER_INFLUXDB_INIT_RETENTION=4w
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=token-seguidor-secreto-123
+
+  # ----- NODE-RED -----
+  nodered:
+    image: nodered/node-red:latest
+    container_name: nodered
+    restart: unless-stopped
+    ports:
+      - "1880:1880"      # interfaz web de Node-RED
+    volumes:
+      - nodered-data:/data
+    depends_on:
+      - mosquitto
+      - influxdb
+
+# ----- Volumenes persistentes (los datos sobreviven a reinicios) -----
+volumes:
+  mosquitto-data:
+  mosquitto-log:
+  influxdb-data:
+  influxdb-config:
+  nodered-data:
